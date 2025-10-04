@@ -1,22 +1,26 @@
 class WallPaper {
+    // Static tables for alignment classes
+    // This way, no memory is wasted when creating objects.
+    static verticalTable = {
+        "top" : "align-items-start", 
+        "center" : "align-items-center", 
+        "bottom" : "align-items-end"
+    }
+
+    // Static tables for alignment classes
+    // This way, no memory is wasted when creating objects.
+    static horizontalTable = {
+        "left" : "justify-content-start", 
+        "center" : "justify-content-center", 
+        "right" : "justify-content-end"
+    }
+
     constructor(text, colorCode, imgUrl, vertical, horizontal) {
         this.text = text;
         this.colorCode  = colorCode;
         this.imgUrl = imgUrl;
         this.vertical = vertical;
         this.horizontal = horizontal;
-    }
-
-    verticalTable = {
-        "top" : "align-items-start", 
-        "center" : "align-items-center", 
-        "bottom" : "align-items-end"
-    }
-
-    horizontalTable = {
-        "left" : "justify-content-start", 
-        "center" : "justify-content-center", 
-        "right" : "justify-content-end"
     }
 
     generateWallPaper() {
