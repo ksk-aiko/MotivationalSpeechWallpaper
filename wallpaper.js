@@ -46,7 +46,7 @@ class WallPaper {
     }
 }
 
-class helperFunction {
+class WallPaperHelper {
     static showAll(paperList) {
         for (let i = 0; i < paperList.length; i++) {
             paperList[i].generateWallPaper();
@@ -62,4 +62,4 @@ let wallPaper3 = new WallPaper("Scientists study the world as it is, engineers c
 
 let wallPaperList = [wallPaper1, wallPaper2, wallPaper3];
 
-helperFunction.showAll(wallPaperList);
+WallPaperHelper.showAll(wallPaperList);
