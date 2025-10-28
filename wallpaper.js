@@ -28,12 +28,14 @@ class WallPaper {
         let container = document.createElement("div");
         container.classList.add("container", "d-flex", "justify-content-center");
 
+        // change keyword 'this' to 'WallPaper' for static properties
+        // in this way, we can access static properties inside instance methods
         container.innerHTML = 
         `
-            <div class= "vh-75 d-flex p-md-5 p-3 my-5 col-md-8 col-12 imgBackground ${this.horizontalTable[this.horizontal]} ${this.verticalTable[this.vertical]}" style="background-image: url('${this.imgUrl}');">
+            <div class= "vh-75 d-flex p-md-5 p-3 my-5 col-md-8 col-12 imgBackground ${this.horizontalTable[this.horizontal]} ${WallPaper.verticalTable[this.vertical]}" style="background-image: url('${WallPaper.imgUrl}');">
                 <div class="col-8">
                     <h3 class="paperText" style="color:#${this.colorCode};">
-                    ${this.text}
+                    ${WallPaper.text}
                     </h3>
                 </div>
             </div>
