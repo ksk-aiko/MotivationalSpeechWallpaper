@@ -48,9 +48,10 @@ class WallPaper {
 
 class WallPaperHelper {
     static showAll(paperList) {
-        for (let i = 0; i < paperList.length; i++) {
-            paperList[i].generateWallPaper();
-        }
+        // forEach is simpler to write than a for loop.
+        paperList.forEach((paper) => {
+            paper.generateWallPaper();
+        })
     }
 }
 
