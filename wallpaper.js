@@ -24,8 +24,11 @@ class WallPaper {
     }
 
     generateWallPaper() {
-        let domObj = document.getElementById("target");
-        let container = document.createElement("div");
+        /** remove variable domObj for better reusability */
+        // let domObj = document.getElementById("target");
+
+        // use const keyword for variables that won't be reassigned
+        const container = document.createElement("div");
         container.classList.add("container", "d-flex", "justify-content-center");
 
         // change keyword 'this' to 'WallPaper' for static properties
@@ -41,8 +44,9 @@ class WallPaper {
             </div>
         `
 
-        domObj.append(container);
-        return domObj;
+        // Changed to add directly to DOM without return
+        // This way, we don't need to call another function to add it to DOM
+        document.getElementById("target").append(container);
     }
 }
 
