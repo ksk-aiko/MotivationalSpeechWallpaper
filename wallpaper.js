@@ -32,10 +32,10 @@ class WallPaper {
         // in this way, we can access static properties inside instance methods
         container.innerHTML = 
         `
-            <div class= "vh-75 d-flex p-md-5 p-3 my-5 col-md-8 col-12 imgBackground ${this.horizontalTable[this.horizontal]} ${WallPaper.verticalTable[this.vertical]}" style="background-image: url('${WallPaper.imgUrl}');">
+            <div class= "vh-75 d-flex p-md-5 p-3 my-5 col-md-8 col-12 imgBackground ${WallPaper.horizontalTable[this.horizontal]} ${WallPaper.verticalTable[this.vertical]}" style="background-image: url('${this.imgUrl}');">
                 <div class="col-8">
                     <h3 class="paperText" style="color:#${this.colorCode};">
-                    ${WallPaper.text}
+                    ${this.text}
                     </h3>
                 </div>
             </div>
