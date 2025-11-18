@@ -36,7 +36,7 @@ class WallPaper {
     // change keyword 'this' to 'WallPaper' for static properties
     // in this way, we can access static properties inside instance methods
     container.innerHTML = `
-            <div class= "vh-75 d-flex p-md-5 p-3 my-5 col-md-8 col-12 imgBackground ${
+            <div class="vh-75 d-flex p-md-5 p-3 my-5 col-md-8 col-12 imgBackground ${
               WallPaper.horizontalTable[this.horizontal]
             } ${
       WallPaper.verticalTable[this.vertical]
