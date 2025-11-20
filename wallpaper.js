@@ -18,6 +18,10 @@ class WallPaper {
   static TEXT_COLUMN_WIDTH = "col-8";
 
   constructor(text, colorCode, imgUrl, vertical, horizontal) {
+    // This way, we validate the input when creating the object
+    if (!WallPaper.verticalTable[vertical]) {
+      throw new Error(`Invalid vertical alignment: ${vertical}.Must be one of: ${Object.keys(WallPaper.verticalTable).join(', ')}`);
+    }
     this.text = text;
     this.colorCode = colorCode;
     this.imgUrl = imgUrl;
