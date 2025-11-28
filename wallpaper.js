@@ -20,8 +20,17 @@ class WallPaper {
   constructor(text, colorCode, imgUrl, vertical, horizontal) {
     // This way, we validate the input when creating the object
     if (!WallPaper.verticalTable[vertical]) {
-      throw new Error(`Invalid vertical alignment: ${vertical}.Must be one of: ${Object.keys(WallPaper.verticalTable).join(', ')}`);
+      throw new Error(`Invalid vertical alignment: ${vertical}. Must be one of: ${Object.keys(WallPaper.verticalTable).join(', ')}`);
     }
+    if (!WallPaper.horizontalTable[horizontal]) {
+      throw new Error(`Invalid horizontal alignment: ${horizontal}. Must be one of: ${Object.keys(WallPaper.horizontalTable).join(', ')}`);
+    }
+
+    // Validate color code format
+    if (!/^([0-9A-Fa-f]{6})$/.test(colorCode)) {
+      throw new Error(`Invalid color code: ${colorCode}. Must be a 6-digit hexadecimal value.`);
+    }
+
     this.text = text;
     this.colorCode = colorCode;
     this.imgUrl = imgUrl;
