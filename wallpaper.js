@@ -1,35 +1,95 @@
+/**
+ * WallPaper class for creating motivational quote wallpaper elements
+ * Uses Bootstrap classes for responsive layout and alignment
+ */
 class WallPaper {
-  // Static tables for alignment classes
-  // This way, no memory is wasted when creating objects.
-  static verticalTable = {
+  /**
+   * Mapping of vertical alignment options to Bootstrap CSS classes
+   * Using static property to share across all instances and save memory
+   */
+  static VERTICAL_ALIGNMENT = Object.freeze({
     top: "align-items-start",
     center: "align-items-center",
     bottom: "align-items-end",
-  };
+  });
 
-  // Static tables for alignment classes
-  // This way, no memory is wasted when creating objects.
-  static horizontalTable = {
+  /**
+   * Mapping of horizontal alignment options to Bootstrap CSS classes
+   * Using static property to share across all instances and save memory
+   */
+  static HORIZONTAL_ALIGNMENT = Object.freeze({
     left: "justify-content-start",
     center: "justify-content-center",
     right: "justify-content-end",
-  };
+  });
 
+  /** Bootstrap column class for text container width */
   static TEXT_COLUMN_WIDTH = "col-8";
 
-  constructor(text, colorCode, imgUrl, vertical, horizontal) {
-    // This way, we validate the input when creating the object
-    if (!WallPaper.verticalTable[vertical]) {
-      throw new Error(`Invalid vertical alignment: ${vertical}. Must be one of: ${Object.keys(WallPaper.verticalTable).join(', ')}`);
-    }
-    if (!WallPaper.horizontalTable[horizontal]) {
-      throw new Error(`Invalid horizontal alignment: ${horizontal}. Must be one of: ${Object.keys(WallPaper.horizontalTable).join(', ')}`);
-    }
+  /** Default target element ID for rendering wallpapers */
+  static TARGET_ELEMENT_ID = "target";
 
-    // Validate color code format
-    if (!/^([0-9A-Fa-f]{6})$/.test(colorCode)) {
-      throw new Error(`Invalid color code: ${colorCode}. Must be a 6-digit hexadecimal value.`);
+  /**
+   * Sanitizes text to prevent XSS attacks
+   * @param {string} text - The text to sanitize
+   * @returns {string} - Sanitized text safe for HTML insertion
+   */
+  static sanitizeText(text) {
+    const div = document.createElement("div");
+    div.textContent = text;
+    return div.innerHTML;
+  }
+
+  /**
+   * Validates the alignment value against available options
+   * @param {string} value - The alignment value to validate
+   * @param {Object} alignmentTable - The alignment options table
+   * @param {string} alignmentType - Type of alignment for error message
+   * @throws {Error} If alignment value is invalid
+   */
+  static validateAlignment(value, alignmentTable, alignmentType) {
+    if (!alignmentTable[value]) {
+      const validOptions = Object.keys(alignmentTable).join(", ");
+      throw new Error(
+        `Invalid ${alignmentType} alignment: ${value}. Must be one of: ${validOptions}`
+      );
     }
+  }
+
+  /**
+   * Validates color code format
+   * @param {string} colorCode - The color code to validate (6-digit hex without #)
+   * @throws {Error} If color code format is invalid
+   */
+  static validateColorCode(colorCode) {
+    if (!/^[0-9A-Fa-f]{6}$/.test(colorCode)) {
+      throw new Error(
+        `Invalid color code: ${colorCode}. Must be a 6-digit hexadecimal value.`
+      );
+    }
+  }
+
+  /**
+   * Creates a new WallPaper instance
+   * @param {string} text - The motivational quote text
+   * @param {string} colorCode - Text color in 6-digit hex format (without #)
+   * @param {string} imgUrl - URL of the background image
+   * @param {string} vertical - Vertical alignment: 'top', 'center', or 'bottom'
+   * @param {string} horizontal - Horizontal alignment: 'left', 'center', or 'right'
+   * @throws {Error} If any parameter is invalid
+   */
+  constructor(text, colorCode, imgUrl, vertical, horizontal) {
+    WallPaper.validateAlignment(
+      vertical,
+      WallPaper.VERTICAL_ALIGNMENT,
+      "vertical"
+    );
+    WallPaper.validateAlignment(
+      horizontal,
+      WallPaper.HORIZONTAL_ALIGNMENT,
+      "horizontal"
+    );
+    WallPaper.validateColorCode(colorCode);
 
     this.text = text;
     this.colorCode = colorCode;
@@ -38,41 +98,74 @@ class WallPaper {
     this.horizontal = horizontal;
   }
 
-  generateWallPaper() {
-    /** remove variable domObj for better reusability */
-    // let domObj = document.getElementById("target");
+  /**
+   * Gets the Bootstrap class for vertical alignment
+   * @returns {string} Bootstrap alignment class
+   */
+  getVerticalClass() {
+    return WallPaper.VERTICAL_ALIGNMENT[this.vertical];
+  }
 
-    // use const keyword for variables that won't be reassigned
+  /**
+   * Gets the Bootstrap class for horizontal alignment
+   * @returns {string} Bootstrap alignment class
+   */
+  getHorizontalClass() {
+    return WallPaper.HORIZONTAL_ALIGNMENT[this.horizontal];
+  }
+
+  /**
+   * Creates the wallpaper DOM element
+   * @returns {HTMLElement} The container element with wallpaper content
+   */
+  createWallPaperElement() {
     const container = document.createElement("div");
     container.classList.add("container", "d-flex", "justify-content-center");
 
-    // change keyword 'this' to 'WallPaper' for static properties
-    // in this way, we can access static properties inside instance methods
-    container.innerHTML = `
-            <div class="vh-75 d-flex p-md-5 p-3 my-5 col-md-8 col-12 imgBackground ${
-              WallPaper.horizontalTable[this.horizontal]
-            } ${
-      WallPaper.verticalTable[this.vertical]
-    }" style="background-image: url('${this.imgUrl}');">
-                <div class="${WallPaper.TEXT_COLUMN_WIDTH}">
-                    <h3 class="paperText" style="color:#${this.colorCode};">
-                    ${this.text}
-                    </h3>
-                </div>
-            </div>
-        `;
+    const sanitizedText = WallPaper.sanitizeText(this.text);
 
-    // Changed to add directly to DOM without return
-    // This way, we don't need to call another function to add it to DOM
-    document.getElementById("target").append(container);
+    container.innerHTML = `
+      <div class="vh-75 d-flex p-md-5 p-3 my-5 col-md-8 col-12 imgBackground ${this.getHorizontalClass()} ${this.getVerticalClass()}" 
+           style="background-image: url('${this.imgUrl}');">
+        <div class="${WallPaper.TEXT_COLUMN_WIDTH}">
+          <h3 class="paperText" style="color:#${this.colorCode};">
+            ${sanitizedText}
+          </h3>
+        </div>
+      </div>
+    `;
+
+    return container;
+  }
+
+  /**
+   * Generates the wallpaper and appends it to the target element in DOM
+   * @param {string} [targetId] - Optional target element ID (defaults to TARGET_ELEMENT_ID)
+   */
+  generateWallPaper(targetId = WallPaper.TARGET_ELEMENT_ID) {
+    const container = this.createWallPaperElement();
+    const targetElement = document.getElementById(targetId);
+
+    if (!targetElement) {
+      throw new Error(`Target element with ID '${targetId}' not found.`);
+    }
+
+    targetElement.append(container);
   }
 }
 
+/**
+ * Helper class for batch operations on WallPaper instances
+ */
 class WallPaperHelper {
-  static showAll(paperList) {
-    // forEach is simpler to write than a for loop.
+  /**
+   * Renders all wallpapers in the provided list to the DOM
+   * @param {WallPaper[]} paperList - Array of WallPaper instances to render
+   * @param {string} [targetId] - Optional target element ID for rendering
+   */
+  static showAll(paperList, targetId) {
     paperList.forEach((paper) => {
-      paper.generateWallPaper();
+      paper.generateWallPaper(targetId);
     });
   }
 }
