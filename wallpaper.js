@@ -70,6 +70,37 @@ class WallPaper {
   }
 
   /**
+   * Validates and sanitizes image URL
+   * Only allows http, https protocols to prevent javascript: and data: XSS attacks
+   * @param {string} url - The URL to validate
+   * @throws {Error} If URL is invalid or uses unsafe protocol
+   */
+  static validateImageUrl(url) {
+    try {
+      const parsedUrl = new URL(url);
+      if (!["http:", "https:"].includes(parsedUrl.protocol)) {
+        throw new Error(
+          `Invalid URL protocol: ${parsedUrl.protocol}. Only http and https are allowed.`
+        );
+      }
+    } catch (e) {
+      if (e.message.includes("Invalid URL protocol")) {
+        throw e;
+      }
+      throw new Error(`Invalid image URL: ${url}`);
+    }
+  }
+
+  /**
+   * Sanitizes URL for safe insertion into HTML attributes
+   * @param {string} url - The URL to sanitize
+   * @returns {string} - CSS-escaped URL safe for style attribute
+   */
+  static sanitizeUrl(url) {
+    return CSS.escape(url);
+  }
+
+  /**
    * Creates a new WallPaper instance
    * @param {string} text - The motivational quote text
    * @param {string} colorCode - Text color in 6-digit hex format (without #)
@@ -90,6 +121,7 @@ class WallPaper {
       "horizontal"
     );
     WallPaper.validateColorCode(colorCode);
+    WallPaper.validateImageUrl(imgUrl);
 
     this.text = text;
     this.colorCode = colorCode;
@@ -123,12 +155,16 @@ class WallPaper {
     container.classList.add("container", "d-flex", "justify-content-center");
 
     const sanitizedText = WallPaper.sanitizeText(this.text);
+    const sanitizedUrl = WallPaper.sanitizeUrl(this.imgUrl);
+    // Color code is already validated in constructor to be hex-only,
+    // providing defense in depth against XSS
+    const safeColorCode = this.colorCode.replace(/[^0-9A-Fa-f]/g, "");
 
     container.innerHTML = `
       <div class="vh-75 d-flex p-md-5 p-3 my-5 col-md-8 col-12 imgBackground ${this.getHorizontalClass()} ${this.getVerticalClass()}" 
-           style="background-image: url('${this.imgUrl}');">
+           style="background-image: url('${sanitizedUrl}');">
         <div class="${WallPaper.TEXT_COLUMN_WIDTH}">
-          <h3 class="paperText" style="color:#${this.colorCode};">
+          <h3 class="paperText" style="color:#${safeColorCode};">
             ${sanitizedText}
           </h3>
         </div>
