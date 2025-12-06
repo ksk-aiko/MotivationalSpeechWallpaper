@@ -17,7 +17,7 @@ class WallPaper {
 
   static TEXT_COLUMN_WIDTH = "col-8";
 
-  constructor(text, colorCode, imgUrl, vertical, horizontal) {
+  constructor({ text, colorCode, imgUrl, vertical, horizontal }) {
     // This way, we validate the input when creating the object
     if (!WallPaper.verticalTable[vertical]) {
       throw new Error(`Invalid vertical alignment: ${vertical}. Must be one of: ${Object.keys(WallPaper.verticalTable).join(', ')}`);
@@ -79,28 +79,29 @@ class WallPaperHelper {
 
 // Create wallpaper list directly without intermediate variables
 // This reduces unnecessary variable declarations
+// Use split assignment during instance creation to improve readability and scalability, and to be independent of argument ordering
 const wallPaperList = [
-  new WallPaper(
-    "Perfection is achieved, not when there is nothing more to add, but when there is nothing left to take away. - Antoine de Saint",
-    "1B4F72",
-    "https://cdn.pixabay.com/photo/2020/06/12/03/06/magnifying-glass-5288877__340.jpg",
-    "top",
-    "right"
-  ),
-  new WallPaper(
-    "The scientist discovers a new type of material or energy and the engineer discovers a new use for it. - Gordon Lindsay Glegg",
-    "007bff",
-    "https://cdn.pixabay.com/photo/2018/02/23/04/38/laptop-3174729_1280.jpg",
-    "center",
-    "left"
-  ),
-  new WallPaper(
-    "Scientists study the world as it is, engineers create the world that never has been. - Theodore von Karman",
-    "ecf0f1",
-    "https://cdn.pixabay.com/photo/2017/05/10/19/29/robot-2301646_1280.jpg",
-    "center",
-    "center"
-  ),
+  new WallPaper({
+    text: "Perfection is achieved, not when there is nothing more to add, but when there is nothing left to take away. - Antoine de Saint",
+    colorCode: "1B4F72",
+    imgUrl: "https://cdn.pixabay.com/photo/2020/06/12/03/06/magnifying-glass-5288877__340.jpg",
+    vertical: "top",
+    horizontal: "right"
+  }),
+  new WallPaper({
+    text: "The scientist discovers a new type of material or energy and the engineer discovers a new use for it. - Gordon Lindsay Glegg",
+    colorCode: "007bff",
+    imgUrl: "https://cdn.pixabay.com/photo/2018/02/23/04/38/laptop-3174729_1280.jpg",
+    vertical: "center",
+    horizontal: "left"
+  }),
+  new WallPaper({
+    text: "Scientists study the world as it is, engineers create the world that never has been. - Theodore von Karman",
+    colorCode: "ecf0f1",
+    imgUrl: "https://cdn.pixabay.com/photo/2017/05/10/19/29/robot-2301646_1280.jpg",
+    vertical: "center",
+    horizontal: "center"
+  }),
 ];
 
 WallPaperHelper.showAll(wallPaperList);
