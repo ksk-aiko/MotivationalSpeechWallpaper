@@ -62,9 +62,12 @@ class WallPaper {
             </div>
         `;
 
-    // Changed to add directly to DOM without return
-    // This way, we don't need to call another function to add it to DOM
-    document.getElementById("target").append(container);
+    // ensure that the target element exists before appending  
+    const target = document.getElementById("target");
+    if (!target) {
+      throw new Error('Element with id="target" was not found in the document.');
+    }
+    target.append(container);
   }
 }
 
