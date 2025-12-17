@@ -38,7 +38,8 @@ class WallPaper {
     this.horizontal = horizontal;
   }
 
-  generateWallPaper() {
+  // Method to generate wallpaper HTML and append to target element
+    render() {
     /** remove variable domObj for better reusability */
     // let domObj = document.getElementById("target");
 
@@ -75,7 +76,7 @@ class WallPaperHelper {
   static showAll(paperList) {
     // forEach is simpler to write than a for loop.
     paperList.forEach((paper) => {
-      paper.generateWallPaper();
+      paper.render();
     });
   }
 }
