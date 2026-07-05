@@ -18,11 +18,11 @@ Motivational Speech Wallpaperは、モチベーションを高める名言を美
 
 - **クラス設計**: `WallPaper`クラスを通じて、プロパティとメソッドのカプセル化を学習
 - **コンストラクタパターン**: 複数のパラメータを受け取るコンストラクタの実装方法
-- **静的メソッド**: `helperFunction`クラスの`showAll`メソッドで静的メソッドの活用方法を理解
+- **静的メソッド**: `WallPaperHelper`クラスの`showAll`メソッドで静的メソッドの活用方法を理解
 
 ```javascript
 class WallPaper {
-    constructor(text, colorCode, imgUrl, vertical, horizontal) {
+    constructor({ text, colorCode, imgUrl, vertical, horizontal }) {
         // カプセル化の実践
     }
 }
@@ -56,8 +56,8 @@ verticalTable = {
 ### 5. デザインパターン
 
 - **Factory Pattern**: `WallPaper`クラスによる一貫したオブジェクト生成
-- **Helper/Utility Pattern**: `helperFunction`クラスによる共通処理の集約
-- **Template Method Pattern**: `generateWallPaper`メソッドでのHTMLテンプレート生成
+- **Helper/Utility Pattern**: `WallPaperHelper`クラスによる共通処理の集約
+- **Template Method Pattern**: `render`メソッドでのHTMLテンプレート生成
 
 ### 6. CSS設計とレスポンシブデザイン
 
@@ -75,11 +75,11 @@ graph TB
     A --> C[CSS: wallpaper.css]
     
     B --> D[WallPaperクラス]
-    B --> E[helperFunctionクラス]
+    B --> E[WallPaperHelperクラス]
     
     D --> F[プロパティ<br/>text, colorCode, imgUrl<br/>vertical, horizontal]
     D --> G[ルックアップテーブル<br/>verticalTable<br/>horizontalTable]
-    D --> H[generateWallPaper メソッド]
+    D --> H[render メソッド]
     
     E --> I[showAll 静的メソッド]
     
@@ -89,7 +89,7 @@ graph TB
     
     I --> M[複数のWallPaperインスタンス<br/>を一括表示]
     
-    N[wallPaper1, wallPaper2, wallPaper3<br/>インスタンス生成] --> M
+    N[wallPaperListインスタンス生成] --> M
     
     C --> O[レスポンシブスタイル]
     C --> P[背景画像スタイル]
@@ -108,20 +108,20 @@ classDiagram
         -String imgUrl
         -String vertical
         -String horizontal
-        -Object verticalTable
-        -Object horizontalTable
-        +constructor(text, colorCode, imgUrl, vertical, horizontal)
-        +generateWallPaper() DOMElement
+        -Object verticalTable {static}
+        -Object horizontalTable {static}
+        +constructor(params) WallPaper
+        +render() void
     }
     
-    class helperFunction {
+    class WallPaperHelper {
         +showAll(paperList)$ void
     }
     
-    WallPaper "1..*" -- "1" helperFunction : uses
+    WallPaper "1..*" -- "1" WallPaperHelper : uses
     
     note for WallPaper "ルックアップテーブルで\nBootstrapクラスをマッピング"
-    note for helperFunction "静的メソッドで\n一括処理を提供"
+    note for WallPaperHelper "静的メソッドで\n一括処理を提供"
 ```
 
 ### 8. Web標準技術の理解
@@ -176,16 +176,16 @@ wallpaper.jsに新しい`WallPaper`インスタンスを追加します:
 
 ```javascript
 // 新しいインスタンスの作成
-let wallPaper4 = new WallPaper(
-    "Your motivational quote here",
-    "FF5733",  // カラーコード(#なし)
-    "https://example.com/image.jpg",  // 背景画像URL
-    "center",  // 縦位置: "top", "center", "bottom"
-    "right"    // 横位置: "left", "center", "right"
-);
+const wallPaper4 = new WallPaper({
+    text: "Your motivational quote here",
+    colorCode: "FF5733",  // カラーコード(#なし)
+    imgUrl: "https://example.com/image.jpg",  // 背景画像URL
+    vertical: "center",  // 縦位置: "top", "center", "bottom"
+    horizontal: "right"  // 横位置: "left", "center", "right"
+});
 
 // wallPaperListに追加
-let wallPaperList = [wallPaper1, wallPaper2, wallPaper3, wallPaper4];
+const wallPaperList = [wallPaper1, wallPaper2, wallPaper3, wallPaper4];
 ```
 
 ### パラメータの説明
@@ -243,8 +243,8 @@ MotivationalSpeechWallpaper/
 1. wallpaper.htmlが読み込まれる
 2. wallpaper.jsが実行される
 3. `WallPaper`インスタンスが生成される
-4. `helperFunction.showAll()`が呼び出される
-5. 各インスタンスの`generateWallPaper()`が実行される
+4. `WallPaperHelper.showAll()`が呼び出される
+5. 各インスタンスの`render()`が実行される
 6. DOMに要素が追加される
 7. wallpaper.cssがスタイルを適用する
 

@@ -1,14 +1,12 @@
 class WallPaper {
-  // Static tables for alignment classes
-  // This way, no memory is wasted when creating objects.
+  // Static lookup tables for Bootstrap alignment classes.
+  // Defined as static so the tables are shared across all instances.
   static verticalTable = {
     top: "align-items-start",
     center: "align-items-center",
     bottom: "align-items-end",
   };
 
-  // Static tables for alignment classes
-  // This way, no memory is wasted when creating objects.
   static horizontalTable = {
     left: "justify-content-start",
     center: "justify-content-center",
@@ -18,7 +16,7 @@ class WallPaper {
   static TEXT_COLUMN_WIDTH = "col-8";
 
   constructor({ text, colorCode, imgUrl, vertical, horizontal }) {
-    // This way, we validate the input when creating the object
+    // Validate alignment values against the lookup tables.
     if (!WallPaper.verticalTable[vertical]) {
       throw new Error(`Invalid vertical alignment: ${vertical}. Must be one of: ${Object.keys(WallPaper.verticalTable).join(', ')}`);
     }
@@ -38,32 +36,21 @@ class WallPaper {
     this.horizontal = horizontal;
   }
 
-  // Method to generate wallpaper HTML and append to target element
-    render() {
-    /** remove variable domObj for better reusability */
-    // let domObj = document.getElementById("target");
-
-    // use const keyword for variables that won't be reassigned
+  // Generate wallpaper HTML and append it to the #target element.
+  render() {
     const container = document.createElement("div");
     container.classList.add("container", "d-flex", "justify-content-center");
 
-    // change keyword 'this' to 'WallPaper' for static properties
-    // in this way, we can access static properties inside instance methods
     container.innerHTML = `
-            <div class="vh-75 d-flex p-md-5 p-3 my-5 col-md-8 col-12 imgBackground ${
-              WallPaper.horizontalTable[this.horizontal]
-            } ${
-      WallPaper.verticalTable[this.vertical]
-    }" style="background-image: url('${this.imgUrl}');">
-                <div class="${WallPaper.TEXT_COLUMN_WIDTH}">
-                    <h3 class="paperText" style="color:#${this.colorCode};">
-                    ${this.text}
-                    </h3>
-                </div>
-            </div>
-        `;
+      <div class="vh-75 d-flex p-md-5 p-3 my-5 col-md-8 col-12 imgBackground ${WallPaper.horizontalTable[this.horizontal]} ${WallPaper.verticalTable[this.vertical]}" style="background-image: url('${this.imgUrl}');">
+        <div class="${WallPaper.TEXT_COLUMN_WIDTH}">
+          <h3 class="paperText" style="color:#${this.colorCode};">
+            ${this.text}
+          </h3>
+        </div>
+      </div>
+    `;
 
-    // ensure that the target element exists before appending  
     const target = document.getElementById("target");
     if (!target) {
       throw new Error('Element with id="target" was not found in the document.');
@@ -81,9 +68,7 @@ class WallPaperHelper {
   }
 }
 
-// Create wallpaper list directly without intermediate variables
-// This reduces unnecessary variable declarations
-// Use split assignment during instance creation to improve readability and scalability, and to be independent of argument ordering
+// Instantiate wallpapers using named parameters for clarity and order independence.
 const wallPaperList = [
   new WallPaper({
     text: "Perfection is achieved, not when there is nothing more to add, but when there is nothing left to take away. - Antoine de Saint",
